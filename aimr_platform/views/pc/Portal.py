@@ -130,8 +130,8 @@ class PortalAPI(APIView):
 
                     # 查询已完成抄表水表数
                     finish = WaterModel_WorkList.objects.filter(work_id=work.get('work_id')). \
-                        exclude(Q(meter_reading_date=None) |
-                                Q(meter_reading_date='')).__len__()
+                        exclude(Q(recognition_type=None) |
+                                Q(recognition_type='')).__len__()
 
                     # 返回数据
                     retdata = {
