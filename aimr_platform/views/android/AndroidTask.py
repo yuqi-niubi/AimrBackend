@@ -405,6 +405,8 @@ class AndroidTaskAPI(APIView):
                             recognition_id = _list.recognition_type
                             # 使用量
                             if _list.meter_count.__len__() > 0 and _list.meter_count != '--':
+                                if _list.meter_count_last == '--':
+                                    _list.meter_count_last = 0
                                 meter_use_count = int(_list.meter_count) - int(_list.meter_count_last)
                             else:
                                 meter_use_count = 0
@@ -430,14 +432,21 @@ class AndroidTaskAPI(APIView):
                                 # 得到数组长度
                                 meter_count_average_len = len(meter_average_list)
                                 # 如果大于1，用最后一个抄表数减去第一个抄表数，得到区间用水
+                                meter_count_end = meter_average_list[meter_count_average_len - 1].get('meter_count')
+                                meter_count_start = meter_average_list[0].get('meter_count')
+
+                                if meter_count_start == '--':
+                                    meter_count_start = 0
+
+                                if meter_count_end == '--':
+                                    meter_count_end = 0
+
                                 if meter_count_average_len > 1:
-                                    meter_count_average = \
-                                        int(meter_average_list[meter_count_average_len - 1].get('meter_count') - \
-                                            meter_average_list[0].get('meter_count')) / worklist_meter_average.__len__()
+                                    meter_count_average = int(meter_count_end) - \
+                                                          int(meter_count_start) / worklist_meter_average.__len__()
                                 # 如果长度等于1则直接计算
                                 elif meter_count_average_len == 1:
-                                    meter_count_average = int(
-                                        meter_average_list[0].get('meter_count')) / worklist_meter_average.__len__()
+                                    meter_count_average = int(meter_count_start) / worklist_meter_average.__len__()
                                 else:
                                     meter_count_average = 0
 
@@ -553,20 +562,20 @@ class AndroidTaskAPI(APIView):
                             # 识别方式
                             result[count].__delitem__('recognition_type')
                             count += 1
-                    # 设定压缩文件名
-                    zip_name = datetime.now().strftime("%Y%m%d%H%M%S")
-                    # 以追加模式打开或创建zip文件
-                    fp = ZipFile(zip_file_path + zip_name + '.zip', mode='a')
-                    # 循环需要压缩文件的数组
-                    for i in range(len(meter_img)):
-                        # 写入文件
-                        fp.write(meter_file_path + meter_img[i])
-                    for j in range(len(meter_position_img)):
-                        # 写入文件
-                        fp.write(meter_position_file_path + meter_position_img[j])
-                    fp.close()
-                    # 取到压缩文件的大小
-                    size = os.path.getsize(zip_file_path + zip_name + '.zip')
+                    # # 设定压缩文件名
+                    # zip_name = datetime.now().strftime("%Y%m%d%H%M%S")
+                    # # 以追加模式打开或创建zip文件
+                    # fp = ZipFile(zip_file_path + zip_name + '.zip', mode='a')
+                    # # 循环需要压缩文件的数组
+                    # for i in range(len(meter_img)):
+                    #     # 写入文件
+                    #     fp.write(meter_file_path + meter_img[i])
+                    # for j in range(len(meter_position_img)):
+                    #     # 写入文件
+                    #     fp.write(meter_position_file_path + meter_position_img[j])
+                    # fp.close()
+                    # # 取到压缩文件的大小
+                    # size = os.path.getsize(zip_file_path + zip_name + '.zip')
 
                     # fs = Fileoperate.FileOperate()
                     # # 取得需要上传的文件
@@ -583,8 +592,8 @@ class AndroidTaskAPI(APIView):
 
                     ret = App_status.have_task_success
                     ret['result_data'] = result
-                    ret['zip_name'] = zip_name + '.zip'
-                    ret['file_size'] = size
+                    # ret['zip_name'] = zip_name + '.zip'
+                    # ret['file_size'] = size
                 else:
                     ret = App_status.have_task_fail
             # 更新任务
@@ -610,7 +619,5 @@ class AndroidTaskAPI(APIView):
                     # 返回数据格式化
                     ret = App_status.download_task_success
         except Exception as e:
-            # 输出log日志并且返回状态
-            err_logger.error(str(e))
-            ret = Error.catchError('500', str(e))
+            raise e
         return JsonResponse(ret)
