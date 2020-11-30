@@ -625,6 +625,10 @@ class MeterAPI(APIView):
         routelist.meter_count = int(routelist.meter_count) - 1
         # 保存到数据库
         routelist.save()
+        # 查询任务详细
+        worklists = WaterModel_WorkList.objects.filter(meter_id=meter_id)
+        # 删除相关任务详细
+        worklists.delete()
         # 删除水表
         meter.delete()
         # 返回状态
