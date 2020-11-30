@@ -285,6 +285,9 @@ class MeterAPI(APIView):
             datalist[i].__setitem__('emp_id', emp_name)
             # 判断抄表数
             if datalist[i].get('meter_count') != '--' and int(datalist[i].get('meter_count')) > 0:
+                # 如果前回抄表数为'--'，变成0来进行运算
+                if datalist[i].get('meter_count_last') == '--':
+                    datalist[i].__setitem__('meter_count_last', 0)
                 # 设定用水量
                 datalist[i].__setitem__('use_water',
                                         int(datalist[i].get('meter_count')) - int(datalist[i].get('meter_count_last')))
