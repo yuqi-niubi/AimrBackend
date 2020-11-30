@@ -80,7 +80,7 @@ WSGI_APPLICATION = 'aimr_backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'HOST': '47.245.25.220',
+        'HOST': '127.0.0.1',
         'PROT': '3306',
         'USER': 'root',
         'PASSWORD': '123456',
