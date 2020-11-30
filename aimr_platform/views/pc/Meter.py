@@ -547,8 +547,8 @@ class MeterAPI(APIView):
                                                       Q(meter_customer_no=meter_customer_no))
         # 如果存在，则创建失败，否则保存到数据库
         if meter_exist.__len__() > 0:
-            meter_no_exist = WaterModel_MeterSerializer(meter_exist).get('meter_no')
-            meter_customer_no_exist = WaterModel_MeterSerializer(meter_exist).get('meter_customer_no')
+            meter_no_exist = WaterModel_MeterSerializer(meter_exist[0]).get('meter_no')
+            meter_customer_no_exist = WaterModel_MeterSerializer(meter_exist[0]).get('meter_customer_no')
             # 如果お客様存在
             if meter_no_exist == meter_no:
                 ret = Pc_status.create_meter_fail_customer

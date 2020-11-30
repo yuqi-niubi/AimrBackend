@@ -80,14 +80,13 @@ WSGI_APPLICATION = 'aimr_backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'HOST': '192.168.10.208',
+        'HOST': '47.245.25.220',
         'PROT': '3306',
         'USER': 'root',
         'PASSWORD': '123456',
-        'NAME': 'aimr_release',
+        'NAME': 'aimr',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
