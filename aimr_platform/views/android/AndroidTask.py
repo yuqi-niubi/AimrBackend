@@ -606,7 +606,5 @@ class AndroidTaskAPI(APIView):
                     # 返回数据格式化
                     ret = App_status.download_task_success
         except Exception as e:
-            # 输出log日志并且返回状态
-            err_logger.error(str(e))
-            ret = Error.catchError('500', str(e))
+            raise e
         return JsonResponse(ret)
