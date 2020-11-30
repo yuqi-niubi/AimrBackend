@@ -33,7 +33,6 @@ class LoginAPI(APIView):
             emp_password: 员工密码
             :return:
         """
-        timeb = datetime.now()
         try:
             pro_logger.info('开始登录')
             emp_code = request.GET.get('emp_code')
@@ -49,8 +48,6 @@ class LoginAPI(APIView):
             # 输出log日志并且返回状态
             err_logger.error(str(e))
             ret = Error.catchError('500', str(e))
-        timea = datetime.now()
-        print(timea - timeb)
         return JsonResponse(ret)
 
     # 员工信息更新以及手机端登录
@@ -129,10 +126,6 @@ class LoginAPI(APIView):
             if emp_role == '01':
                 # 获取当前用户头像
                 _name = _list[0].get('emp_img_name')
-                # 调用FileOperate，暂时未利用
-                # fs = Fileoperate.FileOperate()
-                # res = fs.readfile('emp-avatar', _name)
-                # image_data = base64.b64encode(res.read())
                 # 获取员工头像
                 with open(emp_avatar_file_path + _name, 'rb') as f:
                     image_data = f.read()
