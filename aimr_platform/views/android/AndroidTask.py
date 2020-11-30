@@ -445,7 +445,9 @@ class AndroidTaskAPI(APIView):
                             meter_name_before = WaterModel_WorkList.objects.filter(meter_id=_list.meter_id) \
                                                     .order_by('-meter_reading_date')[:1][0].img_name
 
-                            if meter_name_before not in meter_img:
+                            if meter_name_before not in meter_img \
+                                    and meter_name_before is not None \
+                                    and meter_name_before != '':
                                 meter_img.append(meter_name_before)
                             # 取得上次抄表时间
                             meter_reading_date_before = WaterModel_WorkList.objects.filter(meter_id=_list.meter_id) \
@@ -453,7 +455,9 @@ class AndroidTaskAPI(APIView):
                             # 取得物件位置图片
                             position_name = WaterModel_Meter.objects.filter(meter_id=_list.meter_id)[
                                 0].img_position
-                            if position_name not in meter_position_img:
+                            if position_name not in meter_position_img \
+                                    and position_name is not None \
+                                    and position_name != '':
                                 meter_position_img.append(position_name)
 
                             # →获取水表表数据：路线详细id，水表类型，水表使用期间from，水表使用期间to
@@ -606,5 +610,7 @@ class AndroidTaskAPI(APIView):
                     # 返回数据格式化
                     ret = App_status.download_task_success
         except Exception as e:
-            raise e
+            # 输出log日志并且返回状态
+            err_logger.error(str(e))
+            ret = Error.catchError('500', str(e))
         return JsonResponse(ret)
