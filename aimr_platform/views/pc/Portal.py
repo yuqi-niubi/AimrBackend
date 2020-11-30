@@ -103,7 +103,6 @@ class PortalAPI(APIView):
                     Q(work_id=work.work_id) & Q(meter_reading_status='91'))
                 if work_lists_met.__len__() > 0:
                     work_met_c += work_lists_met.__len__()
-
                 # 誤検針可能 数
                 work_lists_mis = WaterModel_WorkList.objects.filter(
                     Q(work_id=work.work_id) & Q(meter_reading_status='92'))
@@ -158,22 +157,22 @@ class PortalAPI(APIView):
                         'sum_finish': sum_finish,
                     }
                     # 当月メーター故障 数
-                    work_thismon_met_c = work_met_c
+                    work_thismon_met_c += work_met_c
                     # 当月誤検針可能 数
-                    work_thismon_mis_c = work_mis_c
+                    work_thismon_mis_c += work_mis_c
                     # 当月漏水可能 数
-                    work_thismon_wat_c = work_wat_c
+                    work_thismon_wat_c += work_wat_c
                     # 清空
                     work_met_c = 0
                     work_mis_c = 0
                     work_wat_c = 0
                 else:
                     # 前月メーター故障 数
-                    work_lastmon_met_c = work_met_c
+                    work_lastmon_met_c += work_met_c
                     # 前月誤検針可能 数
-                    work_lastmon_mis_c = work_mis_c
+                    work_lastmon_mis_c += work_mis_c
                     # 前月漏水可能 数
-                    work_lastmon_wat_c = work_wat_c
+                    work_lastmon_wat_c += work_wat_c
                     # 清空
                     work_met_c = 0
                     work_mis_c = 0
