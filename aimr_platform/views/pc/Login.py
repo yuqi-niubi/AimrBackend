@@ -178,32 +178,33 @@ class LoginAPI(APIView):
             emp.token_expired_time = payload_info.get('exp')
             emp.save()
         return token
+
     # 批量更改数据用，请勿删改
-    def delete(self, request):
-
-        # count_list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
-        # works = WaterModel_WorkList.objects.filter(Q(work_id='107'))
-        #
-        # img_name = ['987.jpg', '789.jpg', '654.jpg', '456.jpg',
-        #             '432.jpg', '543.jpg', '321.jpg', '123.jpg']
-        # recognition_type = ['00', '01', '02']
-        # for work in works:
-        #     rand = random.randint(0, 10000)
-        #     work.meter_reading_date = datetime.now()
-        #     work.meter_reading_status = '20'
-        #     work.meter_count = str(rand).rjust(4, '0')
-        #     work.recognition_type = recognition_type[random.randint(0, 2)]
-        #     work.img_name = img_name[random.randint(0, 7)]
-        #     work.meter_count_last = str(rand - (count_list[random.randint(0, 19)] - 20)).rjust(4, '0')
-        #     if int(work.meter_count) - int(work.meter_count_last) > 20 or int(work.meter_count) - int(work.meter_count_last) < 0:
-        #         work.meter_reading_status = '81'
-        #     work.save()
-
-        works = WaterModel_WorkList.objects.all()
-        for work in works:
-            if work.meter_count != '--':
-                work.meter_count = str(work.meter_count).rjust(4, '0')
-            if work.meter_count_last != '--':
-                work.meter_count_last = str(work.meter_count_last).rjust(4, '0')
-            work.save()
-        return JsonResponse({'code': '200'})
+    # def delete(self, request):
+    #
+    #     # count_list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+    #     # works = WaterModel_WorkList.objects.filter(Q(work_id='107'))
+    #     #
+    #     # img_name = ['987.jpg', '789.jpg', '654.jpg', '456.jpg',
+    #     #             '432.jpg', '543.jpg', '321.jpg', '123.jpg']
+    #     # recognition_type = ['00', '01', '02']
+    #     # for work in works:
+    #     #     rand = random.randint(0, 10000)
+    #     #     work.meter_reading_date = datetime.now()
+    #     #     work.meter_reading_status = '20'
+    #     #     work.meter_count = str(rand).rjust(4, '0')
+    #     #     work.recognition_type = recognition_type[random.randint(0, 2)]
+    #     #     work.img_name = img_name[random.randint(0, 7)]
+    #     #     work.meter_count_last = str(rand - (count_list[random.randint(0, 19)] - 20)).rjust(4, '0')
+    #     #     if int(work.meter_count) - int(work.meter_count_last) > 20 or int(work.meter_count) - int(work.meter_count_last) < 0:
+    #     #         work.meter_reading_status = '81'
+    #     #     work.save()
+    #
+    #     works = WaterModel_WorkList.objects.all()
+    #     for work in works:
+    #         if work.meter_count != '--':
+    #             work.meter_count = str(work.meter_count).rjust(4, '0')
+    #         if work.meter_count_last != '--':
+    #             work.meter_count_last = str(work.meter_count_last).rjust(4, '0')
+    #         work.save()
+    #     return JsonResponse({'code': '200'})
