@@ -562,38 +562,26 @@ class AndroidTaskAPI(APIView):
                             # 识别方式
                             result[count].__delitem__('recognition_type')
                             count += 1
-                    # # 设定压缩文件名
-                    # zip_name = datetime.now().strftime("%Y%m%d%H%M%S")
-                    # # 以追加模式打开或创建zip文件
-                    # fp = ZipFile(zip_file_path + zip_name + '.zip', mode='a')
-                    # # 循环需要压缩文件的数组
-                    # for i in range(len(meter_img)):
-                    #     # 写入文件
-                    #     fp.write(meter_file_path + meter_img[i])
-                    # for j in range(len(meter_position_img)):
-                    #     # 写入文件
-                    #     fp.write(meter_position_file_path + meter_position_img[j])
-                    # fp.close()
-                    # # 取到压缩文件的大小
-                    # size = os.path.getsize(zip_file_path + zip_name + '.zip')
-
-                    # fs = Fileoperate.FileOperate()
-                    # # 取得需要上传的文件
-                    # file_zip = open('./file.zip', 'rb')
-                    # # 上传到minio服务器
-                    # fs.upload_singlefile('meter-zip', zip_name + '.zip', file_zip, int(size))
-                    # file_zip.close()
-                    # # 移除本地的压缩文件
-                    # os.remove('./file.zip')
-                    # # 移除本地的送信生成的文件
-                    # shutil.rmtree('./file')
-
+                    # 设定压缩文件名
+                    zip_name = datetime.now().strftime("%Y%m%d%H%M%S")
+                    # 以追加模式打开或创建zip文件
+                    fp = ZipFile(zip_file_path + zip_name + '.zip', mode='a')
+                    # 循环需要压缩文件的数组
+                    for i in range(len(meter_img)):
+                        # 写入文件
+                        fp.write(meter_file_path + meter_img[i])
+                    for j in range(len(meter_position_img)):
+                        # 写入文件
+                        fp.write(meter_position_file_path + meter_position_img[j])
+                    fp.close()
+                    # 取到压缩文件的大小
+                    size = os.path.getsize(zip_file_path + zip_name + '.zip')
+                    
                     # 返回状态以及数据
-
                     ret = App_status.have_task_success
                     ret['result_data'] = result
-                    # ret['zip_name'] = zip_name + '.zip'
-                    # ret['file_size'] = size
+                    ret['zip_name'] = zip_name + '.zip'
+                    ret['file_size'] = size
                 else:
                     ret = App_status.have_task_fail
             # 更新任务
