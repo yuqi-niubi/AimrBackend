@@ -318,6 +318,10 @@ class AndroidTaskAPI(APIView):
                     work_list = WaterModel_WorkList.objects.get(work_details_id=work_details_id)
                     # 如果上报为正常抄表数据
                     if meter_reading_status == '02':
+                        if meter_count == '--':
+                            meter_count = 0
+                        if work_list.meter_count_last == '--':
+                            work_list.meter_count_last = 0
                         use_count = int(meter_count) - int(work_list.meter_count_last)
                         # 如果与上次抄表数对比发现异常
                         if use_count > 20 or use_count < 0:
@@ -328,6 +332,8 @@ class AndroidTaskAPI(APIView):
                         # 否则为正常抄表数据
                         else:
                             work_list.meter_reading_status = '20'
+                        # 抄表数
+                        work_list.meter_count = meter_count
                     # 如果上报为异常
                     elif meter_reading_status == '03':
                         # 取得err_flg
@@ -346,8 +352,6 @@ class AndroidTaskAPI(APIView):
                         meter.save()
                     # 抄表日
                     work_list.meter_reading_date = meter_reading_date
-                    # 抄表数
-                    work_list.meter_count = meter_count
                     # 识别方式
                     work_list.recognition_type = recognition_type
                     # 抄表图片
@@ -607,5 +611,7 @@ class AndroidTaskAPI(APIView):
                     # 返回数据格式化
                     ret = App_status.download_task_success
         except Exception as e:
-            raise e
+            # 输出log日志并且返回状态
+            err_logger.error(str(e))
+            ret = Error.catchError('500', str(e))
         return JsonResponse(ret)
