@@ -179,19 +179,16 @@ class TaskAPI(APIView):
         else:
             work = works[0]
             work.work_accept_flag = '01'
+            work.work_accept_date = None
             work.work_send_message_date = datetime.datetime.now()
             work.save()
-            worklists = WaterModel_WorkList.objects.filter(work_id=work.work_id)
-            for i in worklists:
-                i.download_flg = '1'
-                i.save()
+            # 删除以前送信做成的任务详细
+            WaterModel_WorkList.objects.filter(work_id=work.work_id).delete()
 
         # 查询对应路线详细
         routelists = WaterModel_RouteList.objects.filter(route_id=route_id)
         # 水表数组
         _meters_format = []
-        # file_meters = []
-        # file_positions = []
         # 循环路线详细取得水表
         for routelist in routelists:
             routelist_id = WaterModel_RouteListSerializer(routelist).get('routelist_id')
@@ -229,37 +226,6 @@ class TaskAPI(APIView):
                     )
                     worklist.save()
 
-                    # # 如果文件夹不存在则创建
-                    # path_dir = os.sep.join(['./file'])
-                    # if os.path.exists(path_dir):
-                    #     pass
-                    # else:
-                    #     os.mkdir('./file')
-                    # # 取得上次抄表图片名
-                    # meter_name_before = WaterModel_WorkList.objects.filter(meter_id=meter.meter_id) \
-                    #                         .order_by('-meter_reading_date')[:1][0].img_name
-                    # if meter_name_before not in file_meters and meter_name_before != '' and meter_name_before is not None:
-                    #     file_meters.append(meter_name_before)
-                    #
-                    # # 取得物件位置图片名
-                    # position_name = WaterModel_Meter.objects.filter(meter_id=meter.meter_id)[0].img_position
-                    # if position_name not in file_positions  and position_name != '' and position_name is not None:
-                    #     file_positions.append(position_name)
-        # # download图片
-        # if len(file_positions) > 0:
-        #     for i in range(len(file_positions)):
-        #         fs = Fileoperate.FileOperate()
-        #         res = fs.readfile('meter-position', file_positions[i])
-        #         file_position = open('./file/' + file_positions[i], 'wb')
-        #         file_position.write(res.read())
-        #         file_position.close()
-        # if len(file_meters) > 0:
-        #     for i in range(len(file_meters)):
-        #         fs = Fileoperate.FileOperate()
-        #         res = fs.readfile('meter', file_meters[i])
-        #         file_meter = open('./file/' + file_meters[i], 'wb')
-        #         file_meter.write(res.read())
-        #         file_meter.close()
         # 返回消息
         ret = Pc_status.send_message_success
         return ret
