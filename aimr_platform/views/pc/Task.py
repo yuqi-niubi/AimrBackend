@@ -201,7 +201,7 @@ class TaskAPI(APIView):
                         '-meter_reading_date')
                     # 取得上次抄表数,如果没有则设为空
                     if meter_before:
-                        meter_count_last = WaterModel_WorkListSerializer(meter_before[0]).get('meter_count_last')
+                        meter_count_last = WaterModel_WorkListSerializer(meter_before[0]).get('meter_count')
                     else:
                         meter_count_last = '--'
                     # 保存到数据库
