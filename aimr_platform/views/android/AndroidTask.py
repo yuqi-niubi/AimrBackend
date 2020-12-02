@@ -334,6 +334,8 @@ class AndroidTaskAPI(APIView):
                             work_list.meter_reading_status = '20'
                         # 抄表数
                         work_list.meter_count = meter_count
+                        # 识别方式
+                        work_list.recognition_type = recognition_type
                     # 如果上报为异常
                     elif meter_reading_status == '03':
                         # 取得err_flg
@@ -352,8 +354,6 @@ class AndroidTaskAPI(APIView):
                         meter.save()
                     # 抄表日
                     work_list.meter_reading_date = meter_reading_date
-                    # 识别方式
-                    work_list.recognition_type = recognition_type
                     # 抄表图片
                     work_list.img_name = img_name
                     # 更新
