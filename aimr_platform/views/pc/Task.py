@@ -61,7 +61,6 @@ class TaskAPI(APIView):
             token = {
                 'token': emp_data.get('emp_token')
             }
-            pro_logger.info('token:' + str(token))
             t = threading.Thread(target=send_message,
                                  kwargs=token)
             t.start()

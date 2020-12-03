@@ -92,6 +92,7 @@ class PortalAPI(APIView):
             'data_list': '',
             'sum_undone': 0,
             'sum_finish': 0,
+            'sum_errors': 0
         }
         # 如果查询到数据
         if workerrs.__len__() > 0:
@@ -130,15 +131,18 @@ class PortalAPI(APIView):
 
                     # 查询已完成抄表水表数
                     finish = WaterModel_WorkList.objects.filter(work_id=work.get('work_id')). \
-                        exclude(Q(recognition_type=None) |
-                                Q(recognition_type='')).__len__()
+                        exclude(Q(meter_reading_date=None)).__len__()
 
+                    error_count = WaterModel_WorkList.objects.filter(Q(work_id=work.get('work_id')) & (
+                            Q(meter_reading_status='91') | Q(meter_reading_status='92') | Q(meter_reading_status='93')
+                    )).__len__()
                     # 返回数据
                     retdata = {
                         'route': WaterModel_RouteSerializer(route).get('route_name'),
                         'emp': WaterModel_EmpSerializer(emp).get('emp_name'),
                         'count': count_route,
                         'finish': finish,
+                        'error': error_count,
                         'fail': count_route - finish
                     }
                     # 追加到数组
@@ -147,14 +151,18 @@ class PortalAPI(APIView):
                     sum_undone = 0
                     # 完成件数
                     sum_finish = 0
+                    # 异常件数
+                    sum_errors = 0
                     # 循环并统计件数
                     for i in range(_list.__len__()):
                         sum_undone += _list[i].get('fail')
                         sum_finish += _list[i].get('finish')
+                        sum_errors += _list[i].get('error')
                     data = {
                         'data_list': _list,
                         'sum_undone': sum_undone,
                         'sum_finish': sum_finish,
+                        'sum_errors': sum_errors
                     }
                     # 当月メーター故障 数
                     work_thismon_met_c += work_met_c
