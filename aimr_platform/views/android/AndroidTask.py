@@ -326,9 +326,9 @@ class AndroidTaskAPI(APIView):
                         # 如果与上次抄表数对比发现异常
                         if use_count > 20 or use_count < 0:
                             work_list.meter_reading_status = '81'
-                        # 如果与上次抄表数对比无异常，、并且抄表方式为估表
-                        elif recognition_type == '02':
-                            work_list.meter_reading_status = '21'
+                        # # 如果与上次抄表数对比无异常，、并且抄表方式为估表
+                        # elif recognition_type == '02':
+                        #     work_list.meter_reading_status = '21'
                         # 否则为正常抄表数据
                         else:
                             work_list.meter_reading_status = '20'
